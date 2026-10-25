@@ -70,6 +70,7 @@ struct FiltersTests {
         #expect(value(items, "limit") == "10")
         #expect(filters.folderID == 7)
         #expect(filters.isFiltered)
+        #expect(value(Filters(media: .pixiv).query(cursor: nil), "media") == "pixiv")
     }
 
     @Test func treatsAllAndUnsortedAsNoFolderID() {

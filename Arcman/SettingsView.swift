@@ -7,6 +7,9 @@ struct SettingsView: View {
     @State private var base = ""
     @State private var saved = false
     @State private var error: String?
+    @State private var session = ""
+    @State private var sessionSaved = false
+    @State private var sessionError: String?
 
     var body: some View {
         ScrollView {
@@ -50,6 +53,7 @@ struct SettingsView: View {
                         if let source = settings?.fxtwitterBaseUrl.source { ChipStatic(label: t("settings.source.\(source)"), icon: "info.circle") }
                     }
                     note(t("settings.apiBaseHint"))
+                    if let settings { pixivSession(saved: settings.pixivSession.saved) }
                 }
 
                 card(t("settings.server")) {
@@ -73,6 +77,43 @@ struct SettingsView: View {
             settings = try? await API.settings()
             base = settings?.fxtwitterBaseUrl.value ?? ""
             saved = false
+        }
+    }
+
+    @ViewBuilder private func pixivSession(saved: Bool) -> some View {
+        Text(t("settings.pixivSession"))
+        HStack(spacing: 8) {
+            SecureField(t("settings.pixivSessionPlaceholder"), text: $session)
+                .font(.mono(16))
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .inputBox()
+                .onChange(of: session) { if !session.isEmpty { sessionSaved = false; sessionError = nil } }
+            Button(t("common.save")) { saveSession(session) }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(session.trimmingCharacters(in: .whitespaces).isEmpty)
+        }
+        HStack(spacing: 8) {
+            ChipStatic(label: t(saved ? "settings.pixivSessionSaved" : "settings.pixivSessionNone"), icon: "info.circle")
+            if saved {
+                Button(t("settings.pixivSessionClear")) { saveSession("") }.buttonStyle(OutlineButtonStyle(danger: true))
+            }
+        }
+        if sessionSaved { Text(t("settings.saved")).font(.plex(12.5)) }
+        if let sessionError { ErrorText(sessionError) }
+        note(t("settings.pixivSessionHint"))
+    }
+
+    private func saveSession(_ value: String) {
+        Task {
+            do {
+                try await API.savePixivSession(value)
+                settings = try await API.settings()
+                session = ""
+                sessionSaved = true
+            } catch {
+                sessionError = errorMessage(error)
+            }
         }
     }
 

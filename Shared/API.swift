@@ -132,6 +132,7 @@ enum API {
 
     static func settings() async throws -> Settings { try await get("/api/settings") }
     static func saveSettings(fxtwitterBaseURL: String) async throws { try await send("PUT", "/api/settings", body: ["fxtwitter_base_url": fxtwitterBaseURL]) }
+    static func savePixivSession(_ session: String) async throws { try await send("PUT", "/api/settings/pixiv-session", body: ["session": session]) }
 }
 
 struct Tile: Decodable, Hashable, Identifiable {
@@ -248,7 +249,7 @@ struct PageView: Decodable {
 }
 
 struct PostDetail: Decodable {
-    enum Source: String, Decodable { case x, youtube, web }
+    enum Source: String, Decodable { case x, youtube, web, pixiv }
     enum State: String, Decodable { case pending, done, failed }
     let id: Int
     let source: Source
@@ -328,5 +329,7 @@ struct PostProgress: Decodable {
 
 struct Settings: Decodable {
     struct Value: Decodable { let value: String; let source: String }
+    struct PixivSession: Decodable { let saved: Bool }
     let fxtwitterBaseUrl: Value
+    let pixivSession: PixivSession
 }

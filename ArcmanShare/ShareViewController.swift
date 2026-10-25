@@ -110,7 +110,7 @@ struct ShareView: View {
                 close()
             case .duplicate?: phase = .duplicate
             case .invalidUrl?: phase = .failed(t("save.invalid_url"))
-            case .unavailable?: phase = .failed(t("save.unavailable"))
+            case .unavailable?: phase = .failed(t(result?.reason == "login_required" ? "save.loginRequired" : "save.unavailable"))
             case nil: phase = .failed(t("error.generic"))
             }
         } catch let error as APIError where error.status == 401 {

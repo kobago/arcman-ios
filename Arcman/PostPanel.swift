@@ -10,7 +10,7 @@ struct PostPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            if let status = post.status { StatusContent(status: status) }
+            if let status = post.status { StatusContent(status: status, openLabel: post.source == .pixiv ? t("detail.openOnPixiv") : nil) }
             if let video = post.video { videoInfo(video) }
             if let page = post.page { pageInfo(page) }
             if post.state == .failed, let url = URL(string: post.url) {
@@ -201,6 +201,7 @@ struct Avatar: View {
 struct StatusContent: View {
     let status: StatusView
     var nested = false
+    var openLabel: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: nested ? 8 : 14) {
@@ -211,7 +212,7 @@ struct StatusContent: View {
                     Text("@\(status.author.screenName)").font(.plex(12.5)).foregroundStyle(.muted).lineLimit(1)
                 }
                 Spacer(minLength: 0)
-                if !nested, let url = URL(string: status.url) { externalLink(t("detail.openOnX"), url) }
+                if !nested, let url = URL(string: status.url) { externalLink(openLabel ?? t("detail.openOnX"), url) }
             }
             if !status.text.isEmpty {
                 Text(status.text).font(.plex(nested ? 13 : 14)).lineSpacing(5).textSelection(.enabled)

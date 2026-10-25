@@ -227,7 +227,7 @@ private struct ToastView: View {
         case .invalidUrl:
             ResultRow(url: r.url, mark: .bad, message: t("save.invalid_url"), danger: true)
         case .unavailable:
-            ResultRow(url: r.url, mark: .bad, message: t("save.unavailable"), danger: true)
+            ResultRow(url: r.url, mark: .bad, message: t(r.reason == "login_required" ? "save.loginRequired" : "save.unavailable"), danger: true)
         }
     }
 }

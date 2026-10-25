@@ -2,7 +2,7 @@ import Foundation
 
 struct Filters: Equatable {
     enum Media: String, CaseIterable {
-        case photo, video, youtube, web, text
+        case photo, video, pixiv, youtube, web, text
     }
 
     var folder = "all"
