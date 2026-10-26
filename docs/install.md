@@ -31,6 +31,16 @@ Xcode から自分の iPhone にビルドして入れる手順。
 
 アプリで一度ログインしておけば、Safari や X などの共有ボタンで「ARCMAN」を選ぶと URL を保存できる。共有シートに出ないときは、アイコン列の右端の「その他」から追加する。
 
+## バンドル ID と App Group の文字列
+
+`io.github.kobago.arcman` と `group.io.github.kobago.arcman` は逆ドメイン形式の名前で、GitHub とは関係しない。
+
+- Apple が求めるのは、世界で重複しない文字列であることだけ。重複を避ける慣習として、自分のドメインを逆順にして先頭に付ける（`example.com` なら `com.example.arcman`）。
+- ドメインを本当に持っているかは確かめられない。ID は、最初に登録した Team のものになる。Xcode で署名したときに登録される。
+- `io.github.kobago` は GitHub Pages の `kobago.github.io` を逆にしたもの。自分のドメインを持たない個人開発者がよく使う形で、ユーザー名の部分が自分専用なので他人と重なりにくい。GitHub Pages を使っていなくてもかまわない。
+- App Group は、同じ規則の名前に `group.` を付けたもの。
+- インストールしたあとに変えると、別のアプリとして扱われる。ログイン状態や設定は引き継がれない。
+
 ## うまくいかないとき
 
 - **バンドル ID が使えないと言われる**: `io.github.kobago.arcman` が他のアカウントで登録済みの場合に起きる。両ターゲットの Bundle Identifier を自分用の値に変える。`ArcmanShare` の ID は `<アプリの ID>.share` にする。
